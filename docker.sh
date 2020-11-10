@@ -1,10 +1,12 @@
 #!/bin/bash
 
-while getopts ":d:s:" Option
+host_port=8888
+while getopts ":d:s:p:" Option
 do
     case $Option in
         d ) dataset_dir=$OPTARG;;
         s ) sequencing_dir=$OPTARG;;
+        p ) host_port=$OPTARG;;
         * ) echo "invalid option specified"; exit 1;;
     esac
 done
@@ -25,10 +27,19 @@ elif [ -n "$sequencing_dir" ]; then
     error=1
 fi
 
+if sudo lsof -i:$host_port > /dev/null; then
+    echo "host port $host_port is in use, specify a different port with -p"
+    error=1
+fi
+
+if [ $error -ne 0 ]; then
+    exit 1;
+fi
+
 uid=$(id -u $SUDO_USER)
 
 docker run \
-    --rm -it -u $uid:$uid -p 8888:8888 --gpus all \
+    --rm -it -u $uid:$uid -p 127.0.0.1:$host_port:8888 --gpus all \
     -v $(pwd):/tf/primo \
     $mounts \
     -e PYTHONPATH=/tf/primo \
