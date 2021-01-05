@@ -43,5 +43,4 @@ docker run \
     -v $(pwd):/tf/primo \
     $mounts \
     -e PYTHONPATH=/tf/primo \
-    --name primo \
     primo
