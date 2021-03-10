@@ -21,3 +21,4 @@ RUN pip install \
     tables \
     unireedsolomon
 
+RUN pip install seaborn
