@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import argparse
 
+# TODO: This module is redundant with simulator.py, we thank it for its service,
+# and it is time to let it go (e.g. delete it).
 defaults = {
     "t_conc": 1e-9,
     "q_conc": 1e-9,
