@@ -50,7 +50,9 @@ class EncoderTrainer:
         y_h = predictor(S_pairs_T)
         y_h_T = layers.Reshape([1])(y_h)
 
+        # Calcdists exists as a convenience property, if one needs to perform a distance calculation on the GPU at the same time (no training happening).
         self.calcdists = tf.keras.Model(inputs=X_pairs, outputs=distances)
+        # The actual trainable model.
         self.model = tf.keras.Model(inputs=X_pairs, outputs=y_h_T)
         self.predictor.trainable(False)
 
@@ -59,7 +61,8 @@ class EncoderTrainer:
         """Generate a callback function to refit the yield predictor during encoder training.
 
         Arguments:
-        predictor_batch_generator: a generator that yields a tuple (pair of indices, pair of feature vectors).
+        predictor_batch_generator: a generator that yields a nested tuple (pair of dataset indices, pair of feature vectors). This is useful if you need to recover what the original file was.
+                                    # TODO: Find out what form the dataset indicies take (is it a string, is ).
         cupyck_sess: an active cupyck session (either CPU or GPU) that will be used for simulation
         refit_every: run the callback every N encoder training epochs (default: 1)
         refit_epochs: the number of epochs to run the yield trainer for during this callback (default: 10)

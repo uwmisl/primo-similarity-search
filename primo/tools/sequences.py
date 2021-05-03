@@ -25,12 +25,12 @@ def seqs_to_onehots(seqs):
     """Convert strings (N x L) to one-hot sequences (N x L x 4)"""
     seq_array = np.array(map(list, seqs))
     return np.array([(seq_array == b).T for b in bases]).T.astype(int)
-    
+
 
 def random_mutant_pairs(n, d):
     targets = [ randseq(d) for _ in range(n) ]
     mut_rates = np.random.uniform(0, 1, size=n)
-    
+
     pairs = np.array(
         [ [ target, mutate(target, rate) ]
           for target, rate in zip(targets, mut_rates)
@@ -39,5 +39,5 @@ def random_mutant_pairs(n, d):
     seq_hdists = np.array(
         [ seq_hdist(s1, s2) for s1, s2 in pairs ]
     )
-    
+
     return pairs, seq_hdists

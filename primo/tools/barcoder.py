@@ -12,7 +12,7 @@ def has_hp(seq):
 def ends_ok(seq):
     return (
         (seq[0] == "A" or seq[0] == "C")
-        and 
+        and
         (seq[-1] == "G" or seq[-1] == "T")
     )
 
@@ -31,17 +31,17 @@ def enumerate_seqs(n):
 def base10_to_baseK(num, K):
     if num == 0:
         return [0]
-    
+
     rem = num % K
     result = []
-    
+
     while num >= 1:
         result.append(rem)
         num /= K
         rem = num % K
-    
+
     return result
-    
+
 def baseK_to_base10(num, K):
     result = 0
     for ix, n in enumerate(num):
@@ -50,36 +50,36 @@ def baseK_to_base10(num, K):
 
 class Barcoder(object):
     def __init__(self, n_data_symbols, n_check_symbols, bits_per_symbol, bases_per_symbol, seed=42):
-        
+
         self.n_data_symbols   = n_data_symbols
         self.n_check_symbols  = n_check_symbols
         self.bits_per_symbol  = bits_per_symbol
         self.bases_per_symbol = bases_per_symbol
-        
+
         self.total_symbols    = (self.n_data_symbols + self.n_check_symbols)
         self.max_bits         = self.bits_per_symbol * self.n_data_symbols
         self.max_data         = 2**self.max_bits - 1
         self.total_seqlen     = self.total_symbols * self.bases_per_symbol
-        
+
         self.ecc = rs.RSCoder(
             n=self.total_symbols,
             k=self.n_data_symbols,
             c_exp=self.bits_per_symbol,
             prim=rs.find_prime_polynomials(c_exp=self.bits_per_symbol)[2]
         )
-        
+
         self.codebook = np.array([
             seq for seq in enumerate_seqs(self.bases_per_symbol)
             if not has_hp(seq) and ends_ok(seq)
         ])[:2**self.bits_per_symbol]
-        
+
         assert len(self.codebook) == 2**self.bits_per_symbol
 
         np.random.seed(seed)
         self.barcodes   = np.random.permutation(self.max_data)
         self.unbarcodes = np.argsort(self.barcodes)
 
-        
+
     def indices_to_encoder_vals(self, indices):
         if self.bits_per_symbol <= 8:
             vals = struct.pack("B" * len(indices), *indices)
@@ -96,7 +96,7 @@ class Barcoder(object):
                 indices.append(int(val))
 
         return indices
-    
+
     def num_to_seq(self, num):
 
         message_indices = base10_to_baseK(num, 2**self.bits_per_symbol)
@@ -113,7 +113,7 @@ class Barcoder(object):
     def seq_to_num(self, seq):
 
         subseqs = [
-            "".join(seq) 
+            "".join(seq)
             for seq in np.array_split(list(seq), self.total_symbols)
         ]
 
@@ -141,7 +141,7 @@ class Barcoder(object):
             raise
         except Exception:
             return ["ECC Failed", None]
-        
+
     def num_to_barcode_seq(self, n):
         barcode = self.barcodes[n]
         seq = self.num_to_seq(barcode)

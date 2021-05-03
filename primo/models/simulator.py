@@ -47,6 +47,7 @@ class Simulator:
     def simulate(self, feature_seq_pairs):
         """
         Takes a batch of pairs of feature sequences as a pandas dataframe,
+        simulates the thermodynamic yield from their
 
         """
 
@@ -62,6 +63,7 @@ class Simulator:
                   ],
                   "x0": np.array([self.t_conc, self.q_conc]),
                   "temperature": self.temp,
+                  # Each strand can hybridize with a maximum of one other strand.
                   "max_complex_size": 2
                 },
             axis = 1,
@@ -70,6 +72,9 @@ class Simulator:
 
         conc_results = self.session.concentrations(conc_jobs)
 
+
+        # Calculates the yield (ratio of final concentration of the duplex to the initial concentration of the limiting reagent).
+        # Duplex here refers to the hybridized target and query.
         duplex_yields = conc_results.apply(
             lambda result:
                 result.concentrations[(1,2)] / result.x0.min(),
@@ -80,6 +85,7 @@ class Simulator:
         return conc_jobs.join(duplex_yields)
 
 if __name__ == "__main__":
+    # This allows you to use this simulator as either a client or a server.
     import argparse
 
     parser = argparse.ArgumentParser()
