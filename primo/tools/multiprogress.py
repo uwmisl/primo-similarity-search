@@ -1,8 +1,14 @@
+
+"""A multi-thread friendly progress bar custom built by Callie.
+Feel free to delete (we thank it for its service in getting us this far, and
+it is no longer necessary.)
+"""
 import multiprocessing.pool as mp
 import itertools
 import ipywidgets
 from IPython.display import display
 import logging
+
 
 class ProgressPool(mp.Pool):
 
