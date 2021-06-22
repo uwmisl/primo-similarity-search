@@ -15,7 +15,7 @@ def calc_yields(session, jobs, use_defaults = True):
         jobs['t_conc'] = defaults['t_conc']
         jobs['q_conc'] = defaults['q_conc']
         jobs['temperature'] = defaults['temperature']
-        
+
     conc_jobs = jobs.apply(
         lambda job:
             { "sequences": [job.target, job.query],
