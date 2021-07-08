@@ -53,30 +53,3 @@ for our experiments, open and run [this notebook](notebooks/01_datasets/01_downl
 
 The code used to extract the feature vectors can be found in
 [this notebook](notebooks/01_datasets/02_extract_features.ipynb).
-
-
-Model Training
---------------
-
-
-
-Simulation
-----------
-
-
-
-Experimental Setup & Analysis
------------------------------
-
-
-
-Benchmarking in-silico Algorithms
----------------------------------
-
-
-
-Plots & Figures
----------------
-
-
-
