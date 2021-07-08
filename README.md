@@ -1,8 +1,6 @@
 PRIMO Similarity Search
 =======================
 
-This document and repository are a work in progress. Talk to callie if you have
-questions.
 
 Setup
 -----
